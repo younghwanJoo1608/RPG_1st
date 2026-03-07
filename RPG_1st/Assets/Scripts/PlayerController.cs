@@ -5,13 +5,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // public으로 선언하면 유니티 에디터 창에서 속도를 직접 조절.
-    public float moveSpeed = 2f; 
+    private float moveSpeed = 3f; 
     
     private Rigidbody2D rb;
     private Animator anim;
     private Vector2 movement;
 
-    private SpriteRenderer sr;
+    // private SpriteRenderer sr;
 
     void Start()
     {
@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         // 캐릭터의 Animator 컴포넌트를 찾아 변수에 저장.
         anim = GetComponent<Animator>();
-        sr = GetComponent<SpriteRenderer>();
+        // sr = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -32,11 +32,13 @@ public class PlayerController : MonoBehaviour
         // 좌우반전 로직
         if (movement.x < 0)
         {
-            sr.flipX = true;
+            // sr.flipX = true;
+            transform.localScale = new Vector3(-1, 1, 1); // 자식 오브젝트까지 모두 뒤집음.
         }
         else if (movement.x > 0)
         {
-            sr.flipX = false;
+            //sr.flipX = false;
+            transform.localScale = new Vector3(1, 1, 1);
         }
 
         // 애니메이션 파라미터 업데이트

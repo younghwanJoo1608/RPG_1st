@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -20,13 +21,12 @@ public class AutoMapBounds : MonoBehaviour
     }
 
     [Header("Camera Inner Offset")]
-    public DirectionalInset camInset = new DirectionalInset { top = 0.5f, bottom = 0.5f, left = 0.5f, right = 0.5f };
+    private DirectionalInset camInset = new DirectionalInset { top = 0.1f, bottom = 0.1f, left = 0.1f, right = 0.1f };
 
     [Header("Player Inner Offset")]
-    public DirectionalInset playerInset = new DirectionalInset { top = 1.5f, bottom = 1.0f, left = 2.8f, right = 2.8f };
+    private DirectionalInset playerInset = new DirectionalInset { top = 1.0f, bottom = 1.0f, left = 1.0f, right = 1.0f };
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         if (targetMap == null)
         {
@@ -60,6 +60,12 @@ public class AutoMapBounds : MonoBehaviour
         edgeCollider.isTrigger = false; // 플레이어는 부딪혀야 하므로 물리 충돌 켜기
         // 선을 이어주는 방식이므로, 마지막에 다시 시작점(bottomLeft)으로 돌아와야 사각형이 닫혀!
         edgeCollider.points = new Vector2[] { playerBottomLeft, playerBottomRight, playerTopRight, playerTopLeft, playerBottomLeft };
+
+        CinemachineConfiner2D confiner = FindObjectOfType<CinemachineConfiner2D>();
+        if (confiner != null)
+        {
+            confiner.InvalidateCache(); 
+        }
     }
 
     // Update is called once per frame
