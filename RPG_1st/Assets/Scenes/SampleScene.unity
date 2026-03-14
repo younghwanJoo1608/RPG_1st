@@ -7051,6 +7051,7 @@ GameObject:
   - component: {fileID: 280377153}
   - component: {fileID: 280377154}
   - component: {fileID: 280377155}
+  - component: {fileID: 280377156}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -7071,7 +7072,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 10
   m_AngularDamping: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -7198,6 +7199,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &280377156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280377147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff2c4020f93a53742a3f46bc2c0d5b18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHealth: 100
+  currentHealth: 0
+  knockbackForce: 8
+  stunTime: 0.3
 --- !u!1 &280789720
 GameObject:
   m_ObjectHideFlags: 0
@@ -8211,6 +8228,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb6dd6f4959d169419b808e0495a7330, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slime
+  maxHealth: 50
+  moveSpeed: 1
+  attackDamage: 10
+  knockbackForce: 10
+  stunTime: 0.5
+  attackCooldown: 3
 --- !u!1 &958553142
 GameObject:
   m_ObjectHideFlags: 0

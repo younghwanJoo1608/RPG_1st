@@ -12,6 +12,10 @@ public abstract class BaseMonster : MonoBehaviour
     public float knockbackForce = 10f;
     public float stunTime = 0.5f; // 총 경직 시간 (밀려나서 멍때리는 시간)
 
+    [Header("Attack Settings")]
+    public float attackCooldown = 3f; // 3초에 한 번씩만 데미지를 줌
+    protected float lastAttackTime = 0f; // 마지막으로 공격한 시간 기억
+
     protected int currentHealth;
     protected Rigidbody2D rb;
     protected SpriteRenderer spriteRenderer;
@@ -43,7 +47,6 @@ public abstract class BaseMonster : MonoBehaviour
         isKnockbacked = true;
         rb.linearVelocity = Vector2.zero; // 기존에 다가오던 가속도를 0으로 초기화.
         Vector2 knockbackDirection = (transform.position - attacker.position).normalized;
-        float knockbackForce = 10f;
 
         // Impulse(순간적인 힘)로 밀어버림.
         rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
@@ -74,6 +77,30 @@ public abstract class BaseMonster : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(FadeOutAndDestroy());
+    }
+
+    protected virtual void OnCollisionStay2D(Collision2D collision)
+    {
+        // 몬스터가 죽었거나, 넉백(경직) 당해서 날아가는 중일 때는 공격 불가!
+        if (isDead || isKnockbacked) return;
+
+        // 부딪힌 대상이 플레이어인지 확인
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            // 마지막으로 때린 시간에서 쿨타임이 지났는지 확인
+            if (Time.time >= lastAttackTime + attackCooldown)
+            {
+                PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+                if (playerHealth != null)
+                {
+                    // 플레이어의 TakeDamage 함수 실행
+                    playerHealth.TakeDamage(attackDamage, transform);
+                    
+                    // 마지막 공격 시간 갱신
+                    lastAttackTime = Time.time; 
+                }
+            }
+        }
     }
 
     // 일정 시간을 기다렸다가 실행되게 하는 코루틴.

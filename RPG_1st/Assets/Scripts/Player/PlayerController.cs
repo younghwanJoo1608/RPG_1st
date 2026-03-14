@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
 
     private bool isAttacking = false;
 
+    public bool isStunned = false;
+
     void Start()
     {
         // 게임이 시작될 때 Player에 붙어있는 Rigidbody2D를 찾아 변수에 저장.
@@ -24,6 +26,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (isStunned) return;
+
         if (Input.GetKeyDown(KeyCode.Space) && !isAttacking)
         {
             isAttacking = true; // 공격 스위치 ON
@@ -82,6 +86,7 @@ public class PlayerController : MonoBehaviour
     // 물리 엔진 업데이트 주기마다 호출되는 함수. (물리 연산은 무조건 여기서 처리!)
     void FixedUpdate()
     {
+        if (isStunned) return;
         // 실제 이동 처리
         // 현재 위치 + (이동 방향 벡터 * 속도 * 고정 프레임 시간)
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
