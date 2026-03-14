@@ -61,7 +61,7 @@ public class AutoMapBounds : MonoBehaviour
         // 선을 이어주는 방식이므로, 마지막에 다시 시작점(bottomLeft)으로 돌아와야 사각형이 닫혀!
         edgeCollider.points = new Vector2[] { playerBottomLeft, playerBottomRight, playerTopRight, playerTopLeft, playerBottomLeft };
 
-        CinemachineConfiner2D confiner = FindObjectOfType<CinemachineConfiner2D>();
+        CinemachineConfiner2D confiner = FindFirstObjectByType<CinemachineConfiner2D>();
         if (confiner != null)
         {
             confiner.InvalidateCache(); 
