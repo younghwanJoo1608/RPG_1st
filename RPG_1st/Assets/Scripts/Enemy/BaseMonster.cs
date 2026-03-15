@@ -3,19 +3,10 @@ using UnityEngine;
 
 public abstract class BaseMonster : MonoBehaviour
 {
-    [Header("Base Stats")]
-    public int maxHealth = 50;
-    public float moveSpeed = 1f;
-    public int attackDamage = 10;
-
-    [Header("Hit Feedback")]
-    public float knockbackForce = 10f;
-    public float stunTime = 0.5f; // 총 경직 시간 (밀려나서 멍때리는 시간)
-
     [Header("Attack Settings")]
-    public float attackCooldown = 3f; // 3초에 한 번씩만 데미지를 줌
     protected float lastAttackTime = 0f; // 마지막으로 공격한 시간 기억
 
+    public MonsterData monsterData;
     public HealthBarUI healthBar;
 
     protected int currentHealth;
@@ -26,10 +17,11 @@ public abstract class BaseMonster : MonoBehaviour
 
     protected bool isDead = false;
     protected bool isKnockbacked = false;
+    protected bool isSpawning = true; // 리젠 중일 때.
 
     protected virtual void Start()
     {
-        currentHealth = maxHealth;
+        currentHealth = monsterData.maxHealth;
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         coll = GetComponent<Collider2D>();
@@ -38,21 +30,23 @@ public abstract class BaseMonster : MonoBehaviour
         if (healthBar != null)
         {
             healthBar.Setup(new Color32(0, 130, 255, 255)); // 파란색
-            healthBar.UpdateHealth(currentHealth, maxHealth);
+            healthBar.UpdateHealth(currentHealth, monsterData.maxHealth);
         }
+
+        StartCoroutine(FadeInRoutine());
     }
 
     // 외부(무기)에서 때렸을 때 호출될 함수
-    public void TakeDamage(int damageAmount, Transform attacker)
+    public virtual void TakeDamage(int damageAmount, Transform attacker)
     {
-        // 이미 죽었으면 무시.
-        if (isDead) return;
+        // 이미 죽었거나, 리젠 중이면 무시.
+        if (isDead || isSpawning) return;
 
         currentHealth -= damageAmount;
 
         if (healthBar != null)
         {
-            healthBar.UpdateHealth(currentHealth, maxHealth);
+            healthBar.UpdateHealth(currentHealth, monsterData.maxHealth);
         }
         
 #region 1. 넉백
@@ -62,7 +56,7 @@ public abstract class BaseMonster : MonoBehaviour
         Vector2 knockbackDirection = (transform.position - attacker.position).normalized;
 
         // Impulse(순간적인 힘)로 밀어버림.
-        rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+        rb.AddForce(knockbackDirection * monsterData.knockbackForce, ForceMode2D.Impulse);
 #endregion
 
 #region 2. 피격 체크
@@ -94,26 +88,59 @@ public abstract class BaseMonster : MonoBehaviour
 
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
-        // 몬스터가 죽었거나, 넉백(경직) 당해서 날아가는 중일 때는 공격 불가!
-        if (isDead || isKnockbacked) return;
+        // 생성 중이거나, 죽었거나, 넉백(경직) 당해서 날아가는 중일 때는 공격 불가!
+        if (isDead || isKnockbacked || isSpawning) return;
 
         // 부딪힌 대상이 플레이어인지 확인
         if (collision.gameObject.CompareTag("Player"))
         {
             // 마지막으로 때린 시간에서 쿨타임이 지났는지 확인
-            if (Time.time >= lastAttackTime + attackCooldown)
+            if (Time.time >= lastAttackTime + monsterData.attackCooldown)
             {
                 PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
                 if (playerHealth != null)
                 {
                     // 플레이어의 TakeDamage 함수 실행
-                    playerHealth.TakeDamage(attackDamage, transform);
+                    playerHealth.TakeDamage(monsterData.attackDamage, transform);
                     
                     // 마지막 공격 시간 갱신
                     lastAttackTime = Time.time; 
                 }
             }
         }
+    }
+
+    private IEnumerator FadeInRoutine()
+    {
+        // 생성 중일 때는 콜라이더와 체력바를 꺼서 맞지도, 때리지도 못하게 합니다.
+        if (coll != null) coll.enabled = false;
+        if (healthBar != null) healthBar.gameObject.SetActive(false);
+
+        float fadeDuration = 1f; // 1초 동안 서서히 나타남
+        float elapsedTime = 0f;
+
+        // 시작할 때 알파값을 0(완전 투명)으로 설정
+        spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float newAlpha = Mathf.Lerp(0f, 1f, elapsedTime / fadeDuration);
+            spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, newAlpha);
+            yield return null;
+        }
+
+        // 페이드인 완료 후 원래 색상으로 고정하고, 콜라이더 활성화 및 체력바 표시
+        spriteRenderer.color = originalColor;
+        if (coll != null) coll.enabled = true;
+        if (healthBar != null)
+        {
+            healthBar.gameObject.SetActive(true);
+            healthBar.Setup(Color.blue);
+            healthBar.UpdateHealth(currentHealth, monsterData.maxHealth);
+        }
+
+        isSpawning = false; // 생성 완료.
     }
 
     // 일정 시간을 기다렸다가 실행되게 하는 코루틴.
@@ -125,7 +152,7 @@ public abstract class BaseMonster : MonoBehaviour
         spriteRenderer.color = originalColor;
 
         // 추가 경직 시간
-        yield return new WaitForSeconds(stunTime - 0.15f);
+        yield return new WaitForSeconds(monsterData.stunTime - 0.15f);
 
         // 정신 차린 후 추적
         isKnockbacked = false;
