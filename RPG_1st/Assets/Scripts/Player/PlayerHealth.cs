@@ -5,6 +5,7 @@ public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 100;
     public int currentHealth;
+    public HealthBarUI healthBar;
 
     private Rigidbody2D rb;
     private SpriteRenderer[] spriteRenderers;
@@ -30,6 +31,12 @@ public class PlayerHealth : MonoBehaviour
         {
             originalColors[i] = spriteRenderers[i].color;
         }
+
+        if (healthBar)
+        {
+            healthBar.Setup(new Color32(255, 80, 80, 255)); // 빨간색
+            healthBar.UpdateHealth(currentHealth, maxHealth);
+        }
     }
 
     public void TakeDamage(int damageAmount, Transform attacker)
@@ -38,6 +45,11 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth -= damageAmount;
 
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealth(currentHealth, maxHealth);
+        }
+        
         Debug.Log($"[{this.GetType().Name}] 플레이어가 {damageAmount} 데미지를 입었습니다. (남은 체력: {currentHealth})");
 
         // 플레이어 넉백 (몬스터와 동일한 원리)

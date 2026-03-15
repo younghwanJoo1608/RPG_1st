@@ -28,10 +28,12 @@ public class PlayerController : MonoBehaviour
     {
         if (isStunned) return;
 
-        if (Input.GetKeyDown(KeyCode.Space) && !isAttacking)
+        if (Input.GetKeyDown(KeyCode.Space) && !isAttacking && !isStunned)
         {
             isAttacking = true; // 공격 스위치 ON
             movement = Vector2.zero; // 공격을 시작하면 이동 방향을 0.
+
+            anim.ResetTrigger("Attack");    // 남아 있는 트리거 지우고 새 공격 시작.
             anim.SetTrigger("Attack");
         }
 
@@ -95,5 +97,6 @@ public class PlayerController : MonoBehaviour
     public void AttackComplete()
     {
         isAttacking = false; // 공격 스위치 OFF (다시 이동 가능)
+        anim.ResetTrigger("Attack"); // 플레이어 연타에 따른 다음 공격 선입력 취소.
     }
 }

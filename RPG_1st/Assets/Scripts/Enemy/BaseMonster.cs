@@ -16,6 +16,8 @@ public abstract class BaseMonster : MonoBehaviour
     public float attackCooldown = 3f; // 3초에 한 번씩만 데미지를 줌
     protected float lastAttackTime = 0f; // 마지막으로 공격한 시간 기억
 
+    public HealthBarUI healthBar;
+
     protected int currentHealth;
     protected Rigidbody2D rb;
     protected SpriteRenderer spriteRenderer;
@@ -32,6 +34,12 @@ public abstract class BaseMonster : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         coll = GetComponent<Collider2D>();
         originalColor = spriteRenderer.color;
+
+        if (healthBar != null)
+        {
+            healthBar.Setup(new Color32(0, 130, 255, 255)); // 파란색
+            healthBar.UpdateHealth(currentHealth, maxHealth);
+        }
     }
 
     // 외부(무기)에서 때렸을 때 호출될 함수
@@ -41,6 +49,11 @@ public abstract class BaseMonster : MonoBehaviour
         if (isDead) return;
 
         currentHealth -= damageAmount;
+
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealth(currentHealth, maxHealth);
+        }
         
 #region 1. 넉백
         // 내 위치 - 때린 사람 위치
