@@ -23,7 +23,8 @@ MonoBehaviour:
   maxRoamWait: 3
   minRoamWalk: 3
   maxRoamWalk: 5
-  knockbackForce: 10
+  roamRadius: 5
+  knockbackForce: 5
   stunTime: 0.5
   viewDistance: 5
   viewAngle: 90

@@ -7238,6 +7238,7 @@ MonoBehaviour:
   stunTime: 0.3
   invincibilityDuration: 0.5
   flashInterval: 0.1
+  damageTextPrefab: {fileID: 6594969949766976892, guid: 7557feae3af12be439eda2eaf30bcb41, type: 3}
 --- !u!1 &280789720
 GameObject:
   m_ObjectHideFlags: 0

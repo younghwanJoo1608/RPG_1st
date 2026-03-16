@@ -20,6 +20,9 @@ public abstract class BaseMonster : MonoBehaviour
     protected bool isSpawning = true; // 리젠 중일 때.
     protected bool isAggroed = false;
 
+    [Header("UI")]
+    public GameObject damageTextPrefab;
+
     protected virtual void Start()
     {
         currentHealth = monsterData.maxHealth;
@@ -48,6 +51,19 @@ public abstract class BaseMonster : MonoBehaviour
         if (healthBar != null)
         {
             healthBar.UpdateHealth(currentHealth, monsterData.maxHealth);
+        }
+
+        if (damageTextPrefab != null)
+        {
+            // 몬스터 머리 위(Y축 +0.5)에서 약간 무작위(X축)로 흩어지게 소환해서 타격감을 높입니다.
+            Vector2 randomOffset = new Vector2(Random.Range(-0.5f, 0.5f), 0.5f);
+            Vector2 spawnPosition = (Vector2)transform.position + randomOffset;
+
+            // 프리팹 소환
+            GameObject textObj = Instantiate(damageTextPrefab, spawnPosition, Quaternion.identity);
+            
+            // 텍스트 내용과 색상 세팅
+            textObj.GetComponent<DamageText>().Setup(damageAmount, Color.red);
         }
         
 #region 1. 넉백

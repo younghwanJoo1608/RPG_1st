@@ -18,6 +18,9 @@ public class PlayerHealth : MonoBehaviour
     public float invincibilityDuration = 1f; // 총 무적 시간
     public float flashInterval = 0.1f;       // 깜빡이는 간격
 
+    [Header("UI")]
+    public GameObject damageTextPrefab;
+
     private bool isInvincible = false;
 
     void Start()
@@ -50,6 +53,19 @@ public class PlayerHealth : MonoBehaviour
         if (healthBar != null)
         {
             healthBar.UpdateHealth(currentHealth, maxHealth);
+        }
+
+        if (damageTextPrefab != null)
+        {
+            // 머리 위(Y축 +0.5)에서 약간 무작위(X축)로 흩어지게 소환해서 타격감을 높입니다.
+            Vector2 randomOffset = new Vector2(Random.Range(-0.5f, 0.5f), 0.5f);
+            Vector2 spawnPosition = (Vector2)transform.position + randomOffset;
+
+            // 프리팹 소환
+            GameObject textObj = Instantiate(damageTextPrefab, spawnPosition, Quaternion.identity);
+            
+            // 텍스트 내용과 색상 세팅
+            textObj.GetComponent<DamageText>().Setup(damageAmount, Color.blue);
         }
         
         Debug.Log($"[{this.GetType().Name}] 플레이어가 {damageAmount} 데미지를 입었습니다. (남은 체력: {currentHealth})");

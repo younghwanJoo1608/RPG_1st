@@ -197,6 +197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Slime
   monsterData: {fileID: 11400000, guid: 5f0a8d7f969353d4b9077c7ec60b1d28, type: 2}
   healthBar: {fileID: 7461283050220122673}
+  damageTextPrefab: {fileID: 6594969949766976892, guid: 7557feae3af12be439eda2eaf30bcb41, type: 3}
 --- !u!58 &4261240305426516156
 CircleCollider2D:
   m_ObjectHideFlags: 0
