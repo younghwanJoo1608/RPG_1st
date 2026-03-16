@@ -1,15 +1,22 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MeleeMonster : BaseMonster
 {
     private Transform targetPlayer;
-
     private Vector2 aimOffset = new Vector2(0f, 1f);
     
     private bool isRoaming = false;   // 지금 걷는 중인가? (아니면 쉬는 중인가?)
     private float roamTimer = 0f;     // 상태가 바뀔 때까지 남은 시간
     private Vector2 roamDirection;    // 이번에 걸어갈 랜덤 방향
-
+    private Vector2 roamTargetPos;
+    
+    // Pathfinding
+    private NavMeshPath path;
+    private int currentPathIndex = 0;
+    private float pathUpdateTimer = 0f;
+    private float pathUpdateInterval = 0.2f; // 0.2초마다 플레이어 위치를 향해 새로운 길을 찾습니다.
+    
     protected override void Start()
     {
         // BaseMonster의 Start()를 먼저 실행하여 기본 세팅.
@@ -26,6 +33,8 @@ public class MeleeMonster : BaseMonster
 
         // 타이머를 약간 다르게 줘서 몬스터들이 동시에 움직이는 것을 방지합니다.
         roamTimer = Random.Range(0f, monsterData.maxRoamWait);
+
+        path = new NavMeshPath();
     }
 
     public override void TakeDamage(int damageAmount, Transform attacker)
@@ -92,9 +101,22 @@ public class MeleeMonster : BaseMonster
                 {
                     // 걷기 시작: 360도 중 무작위 방향을 하나 뽑습니다.
                     float randomAngle = Random.Range(0f, 360f);
-                    roamDirection = new Vector2(Mathf.Cos(randomAngle * Mathf.Deg2Rad), Mathf.Sin(randomAngle * Mathf.Deg2Rad)).normalized;
-                    // 걷는 시간 세팅
-                    roamTimer = Random.Range(monsterData.minRoamWalk, monsterData.maxRoamWalk);
+                    Vector2 randomDir = new Vector2(Mathf.Cos(randomAngle * Mathf.Deg2Rad), Mathf.Sin(randomAngle * Mathf.Deg2Rad));
+                    Vector2 randomPoint = (Vector2)transform.position + randomDir * Random.Range(1f, monsterData.roamRadius);
+
+                    NavMeshHit hit;
+                    if (NavMesh.SamplePosition(randomPoint, out hit, 2f, NavMesh.AllAreas))
+                    {
+                        roamTargetPos = hit.position;
+                        roamDirection = (roamTargetPos - (Vector2)transform.position).normalized;
+                        roamTimer = Random.Range(monsterData.minRoamWalk, monsterData.maxRoamWalk);
+                    }
+                    else
+                    {
+                        isRoaming = false;
+                        rb.linearVelocity = Vector2.zero;
+                        roamTimer = Random.Range(monsterData.minRoamWait, monsterData.maxRoamWait);
+                    }
                 }
                 else
                 {
@@ -108,11 +130,19 @@ public class MeleeMonster : BaseMonster
             // [3] 실제로 걸어가기
             if (isRoaming)
             {
-                rb.MovePosition(rb.position + roamDirection * monsterData.roamSpeed * Time.fixedDeltaTime);
-                
-                // 걷는 방향에 맞춰 몸통 뒤집기
-                if (roamDirection.x < 0) transform.localScale = new Vector3(-1, 1, 1);
-                else if (roamDirection.x > 0) transform.localScale = new Vector3(1, 1, 1);
+                if (Vector2.Distance(transform.position, roamTargetPos) < 0.1f)
+                {
+                    isRoaming = false;
+                    rb.linearVelocity = Vector2.zero;
+                    roamTimer = Random.Range(monsterData.minRoamWait, monsterData.maxRoamWait);
+                }
+                else
+                {
+                    rb.MovePosition(rb.position + roamDirection * monsterData.roamSpeed * Time.fixedDeltaTime);
+                    
+                    if (roamDirection.x < 0) transform.localScale = new Vector3(-1, 1, 1);
+                    else if (roamDirection.x > 0) transform.localScale = new Vector3(1, 1, 1);
+                }
             }
         }
         else    // 플레이어 발견.
@@ -126,17 +156,51 @@ public class MeleeMonster : BaseMonster
                 return;
             }
 
-            // (기존의 추적 및 방향 전환 로직)
-            Vector2 moveDirection = directionToPlayer.normalized;
-            rb.MovePosition(rb.position + moveDirection * monsterData.moveSpeed * Time.fixedDeltaTime);
-            
-            if (moveDirection.x < 0)
+            // 1. 일정 시간(0.2초)마다 플레이어까지의 최단 경로를 다시 계산합니다.
+            pathUpdateTimer -= Time.fixedDeltaTime;
+            if (pathUpdateTimer <= 0f)
             {
-                transform.localScale = new Vector3(-1, 1, 1);
+                // 몬스터나 플레이어가 물리 충돌로 인해 파란 영역(NavMesh)을 살짝 벗어났더라도,
+                // SamplePosition을 사용해 '가장 가까운 파란 영역'으로 좌표를 보정해 길찾기 실패를 막습니다!
+                Vector2 startPos = transform.position;
+                Vector2 targetPos = targetPlayer.position; // 반드시 물리적 바닥인 targetPlayer.position 이어야 함.
+
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(startPos, out hit, 2f, NavMesh.AllAreas)) startPos = hit.position;
+                if (NavMesh.SamplePosition(targetPos, out hit, 2f, NavMesh.AllAreas)) targetPos = hit.position;
+
+                NavMesh.CalculatePath(startPos, targetPos, NavMesh.AllAreas, path);
+                
+                // 핵심 2: corners[0]은 항상 '출발 지점'이므로, 그 다음 목표인 corners[1]부터 걷게 합니다.
+                currentPathIndex = 1; 
+                pathUpdateTimer = pathUpdateInterval;
             }
-            else if (moveDirection.x > 0)
+
+            // 2. 계산된 경로(path.corners)가 존재하고, 아직 목적지에 도착하지 않았다면 이동합니다.
+            if (path != null && path.corners.Length > 0 && currentPathIndex < path.corners.Length)
             {
-                transform.localScale = new Vector3(1, 1, 1);
+                Vector2 nextWaypoint = path.corners[currentPathIndex];
+                Vector2 moveDirection = (nextWaypoint - (Vector2)transform.position).normalized;
+
+                rb.MovePosition(rb.position + moveDirection * monsterData.moveSpeed * Time.fixedDeltaTime);
+
+                // 3. 현재 목표 웨이포인트(모퉁이)에 거의 도착했다면, 다음 웨이포인트를 타겟으로 바꿉니다.
+                if (Vector2.Distance(transform.position, nextWaypoint) < 0.8f)
+                {
+                    currentPathIndex++;
+                }
+
+                if (moveDirection.x < 0) transform.localScale = new Vector3(-1, 1, 1);
+                else if (moveDirection.x > 0) transform.localScale = new Vector3(1, 1, 1);
+            }
+            else
+            {
+                // 경로를 찾지 못했거나 이미 도착한 경우의 예외 처리 (임시로 직선 이동)
+                Vector2 moveDirection = directionToPlayer.normalized;
+                rb.MovePosition(rb.position + moveDirection * monsterData.moveSpeed * Time.fixedDeltaTime);
+                
+                if (moveDirection.x < 0) transform.localScale = new Vector3(-1, 1, 1);
+                else if (moveDirection.x > 0) transform.localScale = new Vector3(1, 1, 1);
             }
         }
     }

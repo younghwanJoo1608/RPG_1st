@@ -26,6 +26,7 @@ public class MonsterData : ScriptableObject
     public float maxRoamWait = 15f;   // 가만히 멍때리는 최대 시간
     public float minRoamWalk = 2f;   // 한 방향으로 걷는 최소 시간
     public float maxRoamWalk = 7f;   // 한 방향으로 걷는 최대 시간
+    public float roamRadius = 5f;   // 목적지를 탐색할 최대 반경
 
     [Header("Hit Feedback")]
     public float knockbackForce = 10f;

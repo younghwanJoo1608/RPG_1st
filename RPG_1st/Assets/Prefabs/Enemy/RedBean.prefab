@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5906403728670913863}
   - component: {fileID: 6010156045738562747}
   - component: {fileID: 2790784935864132628}
+  - component: {fileID: 1719950506631317889}
   m_Layer: 6
   m_Name: RedBean
   m_TagString: Enemy
@@ -139,11 +140,11 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00807929, y: -0.3843152}
+  m_Offset: {x: -0.0020341873, y: -0.38425684}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -153,7 +154,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.94405174, y: 1.2173301}
+  m_Size: {x: 0.95014095, y: 1.2174468}
   m_EdgeRadius: 0
 --- !u!50 &6010156045738562747
 Rigidbody2D:
@@ -196,7 +197,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Bean
   monsterData: {fileID: 11400000, guid: 28e801a5ebd64a446a8a587189aa8b50, type: 2}
   healthBar: {fileID: 1898160471510257419}
-  isAggressive: 1
+--- !u!58 &1719950506631317889
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8783868136109289656}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: -1}
+  m_Radius: 0.15
 --- !u!1001 &652949420223765551
 PrefabInstance:
   m_ObjectHideFlags: 0

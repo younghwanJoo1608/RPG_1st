@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4089393060695758278}
   - component: {fileID: 8146855382381659871}
   - component: {fileID: 6099879980521080369}
+  - component: {fileID: 4261240305426516156}
   m_Layer: 6
   m_Name: Bean
   m_TagString: Enemy
@@ -139,11 +140,11 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0018851757, y: -0.61970377}
+  m_Offset: {x: 0.00338161, y: -0.6192484}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -153,7 +154,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.64259005, y: 0.74655294}
+  m_Size: {x: 0.6258316, y: 0.7474637}
   m_EdgeRadius: 0
 --- !u!50 &8146855382381659871
 Rigidbody2D:
@@ -196,9 +197,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Slime
   monsterData: {fileID: 11400000, guid: 5f0a8d7f969353d4b9077c7ec60b1d28, type: 2}
   healthBar: {fileID: 7461283050220122673}
-  isAggressive: 1
-  viewDistance: 5
-  viewAngle: 60
+--- !u!58 &4261240305426516156
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4501427661980513153}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: -1}
+  m_Radius: 0.08
 --- !u!1001 &8418333307840880917
 PrefabInstance:
   m_ObjectHideFlags: 0
