@@ -18,6 +18,7 @@ public abstract class BaseMonster : MonoBehaviour
     protected bool isDead = false;
     protected bool isKnockbacked = false;
     protected bool isSpawning = true; // 리젠 중일 때.
+    protected bool isAggroed = false;
 
     protected virtual void Start()
     {
@@ -86,10 +87,10 @@ public abstract class BaseMonster : MonoBehaviour
         StartCoroutine(FadeOutAndDestroy());
     }
 
-    protected virtual void OnCollisionStay2D(Collision2D collision)
+    protected virtual void OnTriggerStay2D(Collider2D collision)
     {
-        // 생성 중이거나, 죽었거나, 넉백(경직) 당해서 날아가는 중일 때는 공격 불가!
-        if (isDead || isKnockbacked || isSpawning) return;
+        // 생성 중이거나, 죽었거나, 넉백(경직) 당해서 날아가는 중이거나, 플레이어를 발견하지 못했을 때는 공격 불가!
+        if (isDead || isKnockbacked || isSpawning || !isAggroed) return;
 
         // 부딪힌 대상이 플레이어인지 확인
         if (collision.gameObject.CompareTag("Player"))
@@ -97,7 +98,7 @@ public abstract class BaseMonster : MonoBehaviour
             // 마지막으로 때린 시간에서 쿨타임이 지났는지 확인
             if (Time.time >= lastAttackTime + monsterData.attackCooldown)
             {
-                PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+                PlayerHealth playerHealth = collision.GetComponentInParent<PlayerHealth>();
                 if (playerHealth != null)
                 {
                     // 플레이어의 TakeDamage 함수 실행

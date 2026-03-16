@@ -20,6 +20,13 @@ public class MonsterData : ScriptableObject
     public int attackDamage = 10;
     public float attackCooldown = 3f;
 
+    [Header("Roaming Settings")]
+    public float roamSpeed = 1.8f;       // 평소에 어슬렁거릴 때의 걷는 속도
+    public float minRoamWait = 5f;   // 가만히 멍때리는 최소 시간
+    public float maxRoamWait = 15f;   // 가만히 멍때리는 최대 시간
+    public float minRoamWalk = 2f;   // 한 방향으로 걷는 최소 시간
+    public float maxRoamWalk = 7f;   // 한 방향으로 걷는 최대 시간
+
     [Header("Hit Feedback")]
     public float knockbackForce = 10f;
     public float stunTime = 0.5f;

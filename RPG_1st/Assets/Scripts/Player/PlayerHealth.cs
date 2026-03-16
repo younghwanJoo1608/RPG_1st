@@ -15,6 +15,8 @@ public class PlayerHealth : MonoBehaviour
     [Header("Hit Feedback")]
     public float knockbackForce = 8f;
     public float stunTime = 0.3f;
+    public float invincibilityDuration = 1f; // 총 무적 시간
+    public float flashInterval = 0.1f;       // 깜빡이는 간격
 
     private bool isInvincible = false;
 
@@ -82,21 +84,34 @@ public class PlayerHealth : MonoBehaviour
     {
         isInvincible = true;
 
-        Color flashColor = new Color(1f, 1f, 1f, 0.5f);
-        
-        // 1초 동안 반투명해지며 깜빡거리는 연출 (5번 반복)
-        for (int i = 0; i < 5; i++)
+        float elapsedTime = 0f;
+        bool isFlashed = false;
+
+        // 총 무적 시간이 다 지날 때까지 무한 반복.
+        while (elapsedTime < invincibilityDuration)
         {
+            // 삼항 연산자: 반투명 상태면 알파값을 1(원래대로)로, 아니면 0.5(반투명)로 바꿉니다.
+            float targetAlpha = isFlashed ? 1f : 0.5f;
+
             for (int j = 0; j < spriteRenderers.Length; j++)
             {
-                spriteRenderers[j].color = new Color(originalColors[j].r, originalColors[j].g, originalColors[j].b, 0.5f);
+                spriteRenderers[j].color = new Color(originalColors[j].r, originalColors[j].g, originalColors[j].b, targetAlpha);
             }
-            yield return new WaitForSeconds(0.1f);
-            for (int j = 0; j < spriteRenderers.Length; j++)
-            {
-                spriteRenderers[j].color = originalColors[j];
-            }
-            yield return new WaitForSeconds(0.1f);
+
+            isFlashed = !isFlashed; // 상태 반전
+
+            // 한 번 깜빡이고 대기. 
+            // 단, 남은 무적 시간이 깜빡임 간격보다 짧으면 남은 시간만큼만 대기해서 정확히 싱크를 맞춥니다.
+            float waitTime = Mathf.Min(flashInterval, invincibilityDuration - elapsedTime);
+            yield return new WaitForSeconds(waitTime);
+            
+            elapsedTime += waitTime;
+        }
+
+        // 무적 시간이 끝나는 즉시, 스프라이트를 무조건 원래 색상으로 되돌립니다.
+        for (int j = 0; j < spriteRenderers.Length; j++)
+        {
+            spriteRenderers[j].color = originalColors[j];
         }
 
         isInvincible = false;

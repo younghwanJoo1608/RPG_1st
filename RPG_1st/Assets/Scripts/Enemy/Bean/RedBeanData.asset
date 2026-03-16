@@ -15,9 +15,14 @@ MonoBehaviour:
   monsterName: RedBean
   aggroType: 0
   maxHealth: 50
-  moveSpeed: 1.5
+  moveSpeed: 1.2
   attackDamage: 10
   attackCooldown: 3
+  roamSpeed: 1.1
+  minRoamWait: 1.5
+  maxRoamWait: 3
+  minRoamWalk: 3
+  maxRoamWalk: 5
   knockbackForce: 10
   stunTime: 0.5
   viewDistance: 5

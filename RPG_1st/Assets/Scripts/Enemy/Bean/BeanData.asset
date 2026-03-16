@@ -15,9 +15,14 @@ MonoBehaviour:
   monsterName: Bean
   aggroType: 1
   maxHealth: 30
-  moveSpeed: 1.2
+  moveSpeed: 1
   attackDamage: 5
   attackCooldown: 3
+  roamSpeed: 0.8
+  minRoamWait: 2
+  maxRoamWait: 5
+  minRoamWalk: 2
+  maxRoamWalk: 10
   knockbackForce: 10
   stunTime: 0.5
   viewDistance: 5

@@ -3,7 +3,12 @@ using UnityEngine;
 public class MeleeMonster : BaseMonster
 {
     private Transform targetPlayer;
-    private bool isAggroed = false;       // 현재 플레이어를 발견해서 화가 났는가?
+
+    private Vector2 aimOffset = new Vector2(0f, 1f);
+    
+    private bool isRoaming = false;   // 지금 걷는 중인가? (아니면 쉬는 중인가?)
+    private float roamTimer = 0f;     // 상태가 바뀔 때까지 남은 시간
+    private Vector2 roamDirection;    // 이번에 걸어갈 랜덤 방향
 
     protected override void Start()
     {
@@ -18,6 +23,9 @@ public class MeleeMonster : BaseMonster
         }
         float randomDirX = Random.value > 0.5f ? 1f : -1f;
         transform.localScale = new Vector3(randomDirX, 1, 1);
+
+        // 타이머를 약간 다르게 줘서 몬스터들이 동시에 움직이는 것을 방지합니다.
+        roamTimer = Random.Range(0f, monsterData.maxRoamWait);
     }
 
     public override void TakeDamage(int damageAmount, Transform attacker)
@@ -28,13 +36,13 @@ public class MeleeMonster : BaseMonster
         base.TakeDamage(damageAmount, attacker); 
     }
 
-    protected override void OnCollisionStay2D(Collision2D collision)
+    protected override void OnTriggerStay2D(Collider2D collision)
     {
         // 비선공 몬스터는 처음에 맞아도 안 아픔.
         if (!isAggroed && monsterData.aggroType == AggroType.Peaceful) return;
 
         // 그 외의 경우(화났거나 선공형이거나)에는 부모 클래스의 데미지 주는 로직을 정상 실행.
-        base.OnCollisionStay2D(collision);
+        base.OnTriggerStay2D(collision);
     }
 
     // 물리 엔진으로 이동하므로 FixedUpdate 사용.
@@ -45,13 +53,14 @@ public class MeleeMonster : BaseMonster
             return;
 
         // 추적 AI
-        Vector2 directionToPlayer = targetPlayer.position - transform.position;
+        Vector2 targetCenterPos = (Vector2)targetPlayer.position + aimOffset;   // 플레이어 몸통 중앙을 향해 다가오도록.
+        Vector2 directionToPlayer = targetCenterPos - (Vector2)transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
 
         // 평화
         if (!isAggroed)
         {
-            // 선공 몬스터인가?
+            // 시야 검사 : 선공 몬스터인가?
             if (monsterData.aggroType == AggroType.Aggressive)
             {
                 // 플레이어가 시야 거리 안에 들어왔는가?
@@ -67,17 +76,53 @@ public class MeleeMonster : BaseMonster
                     if (angleToPlayer <= monsterData.viewAngle / 2f)
                     {
                         isAggroed = true; // 선공! (발견함)
+                        return; // 발견했으면 아래 배회 로직을 실행하지 않고 즉시 턴을 넘깁니다.
                     }
                 }
             }
+
+            // 자유 배회 (Roaming)
+            roamTimer -= Time.fixedDeltaTime;
+
+            if (roamTimer <= 0f)
+            {
+                isRoaming = !isRoaming; // 걷기 <-> 쉬기 상태 반전
+
+                if (isRoaming)
+                {
+                    // 걷기 시작: 360도 중 무작위 방향을 하나 뽑습니다.
+                    float randomAngle = Random.Range(0f, 360f);
+                    roamDirection = new Vector2(Mathf.Cos(randomAngle * Mathf.Deg2Rad), Mathf.Sin(randomAngle * Mathf.Deg2Rad)).normalized;
+                    // 걷는 시간 세팅
+                    roamTimer = Random.Range(monsterData.minRoamWalk, monsterData.maxRoamWalk);
+                }
+                else
+                {
+                    // 쉬기 시작: 가속도를 죽여서 제자리에 멈춥니다.
+                    rb.linearVelocity = Vector2.zero;
+                    // 쉬는 시간 세팅
+                    roamTimer = Random.Range(monsterData.minRoamWait, monsterData.maxRoamWait);
+                }
+            }
+
+            // [3] 실제로 걸어가기
+            if (isRoaming)
+            {
+                rb.MovePosition(rb.position + roamDirection * monsterData.roamSpeed * Time.fixedDeltaTime);
+                
+                // 걷는 방향에 맞춰 몸통 뒤집기
+                if (roamDirection.x < 0) transform.localScale = new Vector3(-1, 1, 1);
+                else if (roamDirection.x > 0) transform.localScale = new Vector3(1, 1, 1);
+            }
         }
-        else    // 플레이어 발견
+        else    // 플레이어 발견.
         {
             // 플레이어가 없으면 어그로를 풉니다
             if (targetPlayer == null)
             {
                 isAggroed = false;
                 rb.linearVelocity = Vector2.zero; // 포기하고 제자리에 멈춤
+                roamTimer = monsterData.minRoamWait; // 포기하면 잠시 쉬도록 타이머 초기화
                 return;
             }
 
@@ -99,7 +144,7 @@ public class MeleeMonster : BaseMonster
     private void OnDrawGizmosSelected()
     {
         if (monsterData == null) return;
-        
+
         // 씬(Scene) 뷰에서 슬라임을 클릭했을 때만 선이 보입니다.
         Vector3 facingDirection = transform.localScale.x > 0 ? Vector3.right : Vector3.left;
         
