@@ -20,9 +20,9 @@ MonoBehaviour:
   attackCooldown: 3
   roamSpeed: 1.1
   minRoamWait: 1.5
-  maxRoamWait: 3
+  maxRoamWait: 4
   minRoamWalk: 3
-  maxRoamWalk: 5
+  maxRoamWalk: 7
   roamRadius: 5
   knockbackForce: 5
   stunTime: 0.5

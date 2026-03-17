@@ -63,7 +63,7 @@ public abstract class BaseMonster : MonoBehaviour
             GameObject textObj = Instantiate(damageTextPrefab, spawnPosition, Quaternion.identity);
             
             // 텍스트 내용과 색상 세팅
-            textObj.GetComponent<DamageText>().Setup(damageAmount, Color.red);
+            textObj.GetComponent<DamageText>().Setup(damageAmount, false);
         }
         
 #region 1. 넉백

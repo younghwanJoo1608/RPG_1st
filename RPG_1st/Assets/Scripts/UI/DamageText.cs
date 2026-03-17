@@ -4,17 +4,32 @@ using System.Collections;
 
 public class DamageText : MonoBehaviour
 {
-    public float moveSpeed = 0.5f;       // 위로 올라가는 속도
-    public float fadeDuration = 1.5f;  // 사라지는 데 걸리는 시간
+    private float moveSpeed = 0.5f;       // 위로 올라가는 속도
+    private float fadeDuration = 1.5f;  // 사라지는 데 걸리는 시간
+    private float moveDuration = 0.5f; // 위로 올라가는 데 쓰는 시간
+
+    [Header("Sprite Assets")]
+    public TMP_SpriteAsset enemySpriteAsset;  
+    public TMP_SpriteAsset playerSpriteAsset;
 
     private TextMeshPro textMesh;
 
     // 외부에서 텍스트를 생성할 때 호출할 초기화 함수
-    public void Setup(int damageAmount, Color textColor)
+    public void Setup(int damageAmount, bool isPlayer)
     {
         textMesh = GetComponent<TextMeshPro>();
-        textMesh.text = damageAmount.ToString();
-        textMesh.color = textColor; // 플레이어는 빨간색, 몬스터는 흰색 등 색상을 다르게 받을 수 있습니다.
+        textMesh.spriteAsset = isPlayer ? playerSpriteAsset : enemySpriteAsset;
+
+        string damageString = damageAmount.ToString();
+        string spriteText = "";
+        
+        for (int i = 0; i < damageString.Length; i++)
+        {
+            spriteText += $"<sprite name=\"{damageString[i]}\">";
+        }
+
+        textMesh.text = spriteText;
+        textMesh.color = Color.white;
 
         StartCoroutine(FloatAndFade());
     }
@@ -27,7 +42,10 @@ public class DamageText : MonoBehaviour
         while (elapsedTime < fadeDuration)
         {
             // 1. 위로 이동
-            transform.Translate(Vector2.up * moveSpeed * Time.deltaTime);
+            if (elapsedTime < moveDuration)
+            {
+                transform.Translate(Vector2.up * moveSpeed * Time.deltaTime);
+            }
             
             // 2. 투명도(Alpha) 서서히 감소
             float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);

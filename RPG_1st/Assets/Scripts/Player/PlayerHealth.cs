@@ -65,7 +65,7 @@ public class PlayerHealth : MonoBehaviour
             GameObject textObj = Instantiate(damageTextPrefab, spawnPosition, Quaternion.identity);
             
             // 텍스트 내용과 색상 세팅
-            textObj.GetComponent<DamageText>().Setup(damageAmount, Color.blue);
+            textObj.GetComponent<DamageText>().Setup(damageAmount, true);
         }
         
         Debug.Log($"[{this.GetType().Name}] 플레이어가 {damageAmount} 데미지를 입었습니다. (남은 체력: {currentHealth})");
