@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   monsterName: RedBean
   aggroType: 0
-  maxHealth: 50
+  maxHealth: 25
+  minAttack: 3
+  maxAttack: 5
+  critChance: 0.05
+  defense: 1
   moveSpeed: 1.2
-  attackDamage: 10
   attackCooldown: 3
   roamSpeed: 1.1
   minRoamWait: 1.5

@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   monsterName: Bean
   aggroType: 1
-  maxHealth: 30
+  maxHealth: 20
+  minAttack: 2
+  maxAttack: 3
+  critChance: 0.05
+  defense: 1
   moveSpeed: 1
-  attackDamage: 5
   attackCooldown: 3
   roamSpeed: 0.8
   minRoamWait: 2

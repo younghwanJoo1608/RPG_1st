@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int maxHealth = 100;
+    public int maxHealth = 25;
     public int currentHealth;
     public HealthBarUI healthBar;
 
@@ -44,11 +44,11 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damageAmount, Transform attacker)
+    public void TakeDamage(DamageResult damage, Transform attacker)
     {
         if (currentHealth <= 0 ||isInvincible) return;
 
-        currentHealth -= damageAmount;
+        currentHealth -= damage.finalDamage;
 
         if (healthBar != null)
         {
@@ -65,10 +65,10 @@ public class PlayerHealth : MonoBehaviour
             GameObject textObj = Instantiate(damageTextPrefab, spawnPosition, Quaternion.identity);
             
             // 텍스트 내용과 색상 세팅
-            textObj.GetComponent<DamageText>().Setup(damageAmount, true);
+            textObj.GetComponent<DamageText>().Setup(damage.finalDamage, true, damage.isCritical);
         }
         
-        Debug.Log($"[{this.GetType().Name}] 플레이어가 {damageAmount} 데미지를 입었습니다. (남은 체력: {currentHealth})");
+        Debug.Log($"[{this.GetType().Name}] 플레이어가 {damage.finalDamage} 데미지를 입었습니다. (남은 체력: {currentHealth})");
 
         // 플레이어 넉백 (몬스터와 동일한 원리)
         rb.linearVelocity = Vector2.zero;

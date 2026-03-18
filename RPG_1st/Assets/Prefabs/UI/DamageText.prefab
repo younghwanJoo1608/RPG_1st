@@ -196,3 +196,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageText
   enemySpriteAsset: {fileID: 11400000, guid: e689f0e026125e34495e396944bf22b8, type: 2}
   playerSpriteAsset: {fileID: 11400000, guid: 885262dc7fdde1c4ea9dab01fe77ac36, type: 2}
+  criticalSpriteAsset: {fileID: 11400000, guid: 6dd529b6c42a1ef419f788856fda5a2b, type: 2}

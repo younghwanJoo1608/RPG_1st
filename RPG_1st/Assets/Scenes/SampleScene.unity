@@ -7231,7 +7231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff2c4020f93a53742a3f46bc2c0d5b18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHealth: 100
+  maxHealth: 25
   currentHealth: 0
   healthBar: {fileID: 2101841464}
   knockbackForce: 8
@@ -7810,7 +7810,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3241fe0d41d6a341a78a0e04fc0918f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponHitbox
-  weaponDamage: 10
+  minDamage: 1
+  maxDamage: 5
+  critChance: 0.05
+  maxHitsPerTarget: 1
+  hitInterval: 0.2
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

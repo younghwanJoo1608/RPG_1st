@@ -37,12 +37,12 @@ public class MeleeMonster : BaseMonster
         path = new NavMeshPath();
     }
 
-    public override void TakeDamage(int damageAmount, Transform attacker)
+    public override void TakeDamage(DamageResult damage, Transform attacker)
     {
         // 맞으면 어그로가 끌립니다!
         isAggroed = true; 
         // 부모 클래스의 원래 피격, 넉백 로직을 그대로 실행.
-        base.TakeDamage(damageAmount, attacker); 
+        base.TakeDamage(damage, attacker); 
     }
 
     protected override void OnTriggerStay2D(Collider2D collision)

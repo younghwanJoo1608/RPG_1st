@@ -20,6 +20,11 @@ public abstract class BaseMonster : MonoBehaviour
     protected bool isSpawning = true; // 리젠 중일 때.
     protected bool isAggroed = false;
 
+    [Header("Loot Drop")]
+    public GameObject coinPrefab;
+    [Range(0f, 1f)]
+    public float coinDropChance = 0.5f;
+
     [Header("UI")]
     public GameObject damageTextPrefab;
 
@@ -33,7 +38,7 @@ public abstract class BaseMonster : MonoBehaviour
 
         if (healthBar != null)
         {
-            healthBar.Setup(new Color32(0, 130, 255, 255)); // 파란색
+            healthBar.Setup(new Color32(0, 145, 235, 255)); // 파란색
             healthBar.UpdateHealth(currentHealth, monsterData.maxHealth);
         }
 
@@ -41,12 +46,12 @@ public abstract class BaseMonster : MonoBehaviour
     }
 
     // 외부(무기)에서 때렸을 때 호출될 함수
-    public virtual void TakeDamage(int damageAmount, Transform attacker)
+    public virtual void TakeDamage(DamageResult damage, Transform attacker)
     {
         // 이미 죽었거나, 리젠 중이면 무시.
         if (isDead || isSpawning) return;
 
-        currentHealth -= damageAmount;
+        currentHealth -= damage.finalDamage;
 
         if (healthBar != null)
         {
@@ -63,7 +68,7 @@ public abstract class BaseMonster : MonoBehaviour
             GameObject textObj = Instantiate(damageTextPrefab, spawnPosition, Quaternion.identity);
             
             // 텍스트 내용과 색상 세팅
-            textObj.GetComponent<DamageText>().Setup(damageAmount, false);
+            textObj.GetComponent<DamageText>().Setup(damage.finalDamage, false, damage.isCritical);
         }
         
 #region 1. 넉백
@@ -80,10 +85,16 @@ public abstract class BaseMonster : MonoBehaviour
         if (currentHealth <= 0)
         {
             Die();
+
+            if (coinPrefab != null && Random.value <= coinDropChance)
+            {
+                // 몬스터의 현재 위치에 동전 생성 (생성되자마자 ItemDrop의 Start()가 실행되며 통통 튀어 나갑니다)
+                Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            }
         }
         else
         {
-            Debug.Log($"[{this.GetType().Name}] {damageAmount}의 데미지를 입었습니다! (남은 체력: {currentHealth})");
+            Debug.Log($"[{this.GetType().Name}] {damage.finalDamage}의 데미지를 입었습니다! (남은 체력: {currentHealth})");
             // 코루틴이 이미 실행 중일 수 있으니 멈췄다가 다시 켭니다 (연속 타격 시 버그 방지)
             StopAllCoroutines();
             StartCoroutine(HitRoutine());
@@ -117,8 +128,16 @@ public abstract class BaseMonster : MonoBehaviour
                 PlayerHealth playerHealth = collision.GetComponentInParent<PlayerHealth>();
                 if (playerHealth != null)
                 {
+                    int playerDefense = 2; 
+                    DamageResult attackResult = DamageCalculator.Calculate(
+                        monsterData.minAttack, 
+                        monsterData.maxAttack, 
+                        monsterData.critChance, 
+                        playerDefense
+                    );
+                    
                     // 플레이어의 TakeDamage 함수 실행
-                    playerHealth.TakeDamage(monsterData.attackDamage, transform);
+                    playerHealth.TakeDamage(attackResult, transform);
                     
                     // 마지막 공격 시간 갱신
                     lastAttackTime = Time.time; 
@@ -153,7 +172,7 @@ public abstract class BaseMonster : MonoBehaviour
         if (healthBar != null)
         {
             healthBar.gameObject.SetActive(true);
-            healthBar.Setup(Color.blue);
+            healthBar.Setup(new Color32(0, 145, 235, 255)); // 파란색
             healthBar.UpdateHealth(currentHealth, monsterData.maxHealth);
         }
 

@@ -6,19 +6,35 @@ public class DamageText : MonoBehaviour
 {
     private float moveSpeed = 0.5f;       // 위로 올라가는 속도
     private float fadeDuration = 1.5f;  // 사라지는 데 걸리는 시간
-    private float moveDuration = 0.5f; // 위로 올라가는 데 쓰는 시간
+    private float moveDuration = 0.7f; // 위로 올라가는 데 쓰는 시간
 
     [Header("Sprite Assets")]
     public TMP_SpriteAsset enemySpriteAsset;  
     public TMP_SpriteAsset playerSpriteAsset;
+    public TMP_SpriteAsset criticalSpriteAsset;
 
     private TextMeshPro textMesh;
 
     // 외부에서 텍스트를 생성할 때 호출할 초기화 함수
-    public void Setup(int damageAmount, bool isPlayer)
+    public void Setup(int damageAmount, bool isPlayer, bool isCritical)
     {
         textMesh = GetComponent<TextMeshPro>();
-        textMesh.spriteAsset = isPlayer ? playerSpriteAsset : enemySpriteAsset;
+
+        int baseOrder = textMesh.sortingOrder; // 사실 없어도 됨. Instantiate 함수로 복제품이 만들어지기 때문.
+        if (isCritical)
+        {
+            moveSpeed = 0.7f;
+            textMesh.spriteAsset = criticalSpriteAsset;
+            transform.localScale = new Vector3(1.5f, 1.5f, 1f);
+            textMesh.sortingOrder = baseOrder + 1; 
+        }
+        else
+        {
+            moveSpeed = 0.5f;
+            textMesh.spriteAsset = isPlayer ? playerSpriteAsset : enemySpriteAsset;
+            transform.localScale = Vector3.one;
+            textMesh.sortingOrder = baseOrder; 
+        }
 
         string damageString = damageAmount.ToString();
         string spriteText = "";
