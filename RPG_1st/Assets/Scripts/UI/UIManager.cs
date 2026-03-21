@@ -8,7 +8,8 @@ public class UIManager : MonoBehaviour
     public PlayerStats playerStats; // 씬에 있는 플레이어 오브젝트 연결
 
     [Header("UI Elements")]
-    public TextMeshProUGUI expText;     // 우측 상단 경험치 텍스트
+    public TextMeshProUGUI txtExpAmount;
+    public TextMeshProUGUI txtExpPercent;
     public Slider expBar;
 
     private void Start()
@@ -35,7 +36,8 @@ public class UIManager : MonoBehaviour
         if (playerStats.currentLevel >= playerStats.expToNextLevel.Length)
         {
             expBar.value = 1f;
-            expText.text = StringToSprite("100.00%");
+            txtExpAmount.text = StringToSprite("9999/9999");
+            txtExpPercent.text = StringToSprite("100.00%");
             return;
         }
 
@@ -49,9 +51,10 @@ public class UIManager : MonoBehaviour
         // 4. 슬라이더 바 채우기 (주황색 바가 차오름)
         expBar.value = expPercent;
 
-        string expString = $"{currentExp}/{requiredExp}"; // 괄호는 제외했습니다 (스프라이트가 없을까봐)
+        string expString = $"{currentExp}/{requiredExp}";
         string percentString = $"{(expPercent * 100f):F2}%";
-        expText.text = $"{StringToSprite(expString)}  {StringToSprite(percentString)}";
+        txtExpAmount.text = StringToSprite(expString);
+        txtExpPercent.text = StringToSprite(percentString);
     }
 
     private string StringToSprite(string input)

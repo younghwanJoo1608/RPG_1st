@@ -1,10 +1,43 @@
 fileFormatVersion: 2
-guid: 9a796350d0b08174fb335c56beea6d9c
+guid: 4791005b72c808849ade92365c57dd8d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4362670364362826011
-    second: Font_exp_0
+      213: -984481782126612971
+    second: Font_exp_percent_0
+  - first:
+      213: 7956051713697330398
+    second: Font_exp_percent_1
+  - first:
+      213: 5843479387544721292
+    second: Font_exp_percent_2
+  - first:
+      213: -8568082061553932224
+    second: Font_exp_percent_3
+  - first:
+      213: -643069530135201600
+    second: Font_exp_percent_4
+  - first:
+      213: 3044657980208948834
+    second: Font_exp_percent_5
+  - first:
+      213: 8257238643093619391
+    second: Font_exp_percent_6
+  - first:
+      213: -5287970818329736361
+    second: Font_exp_percent_7
+  - first:
+      213: -4586702096267819431
+    second: Font_exp_percent_8
+  - first:
+      213: 7833241916779801096
+    second: Font_exp_percent_9
+  - first:
+      213: -2788948787585715917
+    second: Font_exp_percent_10
+  - first:
+      213: 1849812427402906166
+    second: Font_exp_percent_11
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +84,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 5
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,13 +133,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Font_exp_0
+      name: Font_exp_percent_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 5
-        height: 7
+        x: 4
+        y: 1
+        width: 24
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,228 +148,250 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b1168fbf4915b8c30800000000000000
-      internalID: 4362670364362826011
+      spriteID: 51eef70090b6652f0800000000000000
+      internalID: -984481782126612971
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Font_exp_1
+      name: Font_exp_percent_1
       rect:
         serializedVersion: 2
-        x: 5
-        y: 0
-        width: 5
-        height: 7
+        x: 36
+        y: 1
+        width: 25
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: df60de15542752f4cb606072d59db4fa
-      internalID: 350568141
+      spriteID: ed4319171e2996e60800000000000000
+      internalID: 7956051713697330398
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Font_exp_2
+      name: Font_exp_percent_2
       rect:
         serializedVersion: 2
-        x: 10
+        x: 68
         y: 0
-        width: 5
-        height: 7
+        width: 25
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 738fa3a12c5b2084ab22bba4e846f69e
-      internalID: -500518003
+      spriteID: c879beafa85381150800000000000000
+      internalID: 5843479387544721292
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Font_exp_3
+      name: Font_exp_percent_3
       rect:
         serializedVersion: 2
-        x: 15
+        x: 100
         y: 0
-        width: 5
-        height: 7
+        width: 24
+        height: 31
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: d643f9c71cf318f4fa5d8681183b94d2
-      internalID: -1887202854
+      spriteID: 0486eaab2ce081980800000000000000
+      internalID: -8568082061553932224
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Font_exp_4
+      name: Font_exp_percent_4
       rect:
         serializedVersion: 2
-        x: 20
-        y: 0
-        width: 5
-        height: 7
+        x: 135
+        y: 2
+        width: 22
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 8d3c8a1da4fa31948be85871a4f0da5b
-      internalID: -2119314624
+      spriteID: 0c8f9626bab5317f0800000000000000
+      internalID: -643069530135201600
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Font_exp_5
+      name: Font_exp_percent_5
       rect:
         serializedVersion: 2
-        x: 25
-        y: 0
-        width: 5
-        height: 7
+        x: 166
+        y: 1
+        width: 21
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: c849e6bc3553fea449c428fafb8c0d69
-      internalID: -16871148
+      spriteID: 266a9ec3d4cc04a20800000000000000
+      internalID: 3044657980208948834
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Font_exp_6
+      name: Font_exp_percent_6
       rect:
         serializedVersion: 2
-        x: 30
-        y: 0
-        width: 5
-        height: 7
+        x: 197
+        y: 2
+        width: 23
+        height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: aa367aadc6cef9d46ad4b074653cdb46
-      internalID: 2016994758
+      spriteID: fb249331cca979270800000000000000
+      internalID: 8257238643093619391
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Font_exp_7
+      name: Font_exp_percent_7
       rect:
         serializedVersion: 2
-        x: 35
+        x: 229
         y: 0
-        width: 5
-        height: 7
+        width: 23
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 6d13ce8740bea3b4091a00c6196f0db6
-      internalID: -549464309
+      spriteID: 75b03debe8a5d96b0800000000000000
+      internalID: -5287970818329736361
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Font_exp_8
+      name: Font_exp_percent_8
       rect:
         serializedVersion: 2
-        x: 40
-        y: 0
-        width: 5
-        height: 7
+        x: 261
+        y: 1
+        width: 23
+        height: 29
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: af6b8111678217542bb09d7819c86121
-      internalID: -501112033
+      spriteID: 956ca6daeb2c850c0800000000000000
+      internalID: -4586702096267819431
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Font_exp_9
+      name: Font_exp_percent_9
       rect:
         serializedVersion: 2
-        x: 45
-        y: 0
-        width: 5
-        height: 7
+        x: 291
+        y: 3
+        width: 25
+        height: 27
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: da9d11c95363acd4bbf082a06e3188bb
-      internalID: 490975469
+      spriteID: 80a2c51650445bc60800000000000000
+      internalID: 7833241916779801096
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Font_exp_10
+      name: Font_exp_percent_10
       rect:
         serializedVersion: 2
-        x: 50
+        x: 321
         y: 0
-        width: 5
-        height: 7
+        width: 30
+        height: 31
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: a247203ed2d92694d8e14c5d460f665f
-      internalID: 1573882898
+      spriteID: 331723baad9ab49d0800000000000000
+      internalID: -2788948787585715917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Font_exp_percent_11
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 1
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63a047c1a9adba910800000000000000
+      internalID: 1849812427402906166
       vertices: []
       indices: 
       edges: []
@@ -345,7 +400,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: b1cfcac8850c0c647b02565685d7ced6
     internalID: 0
     vertices: []
     indices: 
@@ -355,19 +410,20 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":5.0,"y":7.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Font_exp_0: 4362670364362826011
-      Font_exp_1: 350568141
-      Font_exp_10: 1573882898
-      Font_exp_2: -500518003
-      Font_exp_3: -1887202854
-      Font_exp_4: -2119314624
-      Font_exp_5: -16871148
-      Font_exp_6: 2016994758
-      Font_exp_7: -549464309
-      Font_exp_8: -501112033
-      Font_exp_9: 490975469
+      Font_exp_percent_0: -984481782126612971
+      Font_exp_percent_1: 7956051713697330398
+      Font_exp_percent_10: -2788948787585715917
+      Font_exp_percent_11: 1849812427402906166
+      Font_exp_percent_2: 5843479387544721292
+      Font_exp_percent_3: -8568082061553932224
+      Font_exp_percent_4: -643069530135201600
+      Font_exp_percent_5: 3044657980208948834
+      Font_exp_percent_6: 8257238643093619391
+      Font_exp_percent_7: -5287970818329736361
+      Font_exp_percent_8: -4586702096267819431
+      Font_exp_percent_9: 7833241916779801096
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
