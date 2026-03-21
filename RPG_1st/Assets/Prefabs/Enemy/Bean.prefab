@@ -197,8 +197,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Slime
   monsterData: {fileID: 11400000, guid: 5f0a8d7f969353d4b9077c7ec60b1d28, type: 2}
   healthBar: {fileID: 7461283050220122673}
-  coinPrefab: {fileID: 5872945501517695927, guid: c747aa51a7472db4690f4486fc3a1903, type: 3}
-  coinDropChance: 0.5
+  coinPrefab: {fileID: 2841489496631709178, guid: ecd4fe55c04ba024b9dfd653a8f7475d, type: 3}
+  coinDropChance: 0.994
   damageTextPrefab: {fileID: 6594969949766976892, guid: 7557feae3af12be439eda2eaf30bcb41, type: 3}
 --- !u!58 &4261240305426516156
 CircleCollider2D:

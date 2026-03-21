@@ -21,6 +21,7 @@ MonoBehaviour:
   defense: 1
   moveSpeed: 1.2
   attackCooldown: 3
+  expReward: 2
   roamSpeed: 1.1
   minRoamWait: 1.5
   maxRoamWait: 4

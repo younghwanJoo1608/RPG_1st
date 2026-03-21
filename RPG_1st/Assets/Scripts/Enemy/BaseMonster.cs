@@ -82,19 +82,29 @@ public abstract class BaseMonster : MonoBehaviour
 #endregion
 
 #region 2. 피격 체크
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 && !isDead)
         {
-            Die();
-
             if (coinPrefab != null && Random.value <= coinDropChance)
             {
                 // 몬스터의 현재 위치에 동전 생성 (생성되자마자 ItemDrop의 Start()가 실행되며 통통 튀어 나갑니다)
                 Instantiate(coinPrefab, transform.position, Quaternion.identity);
             }
+
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                PlayerStats pStats = player.GetComponentInParent<PlayerStats>();
+
+                if (pStats != null && monsterData != null)
+                {
+                    pStats.AddExp(monsterData.expReward);
+                }
+            }
+
+            Die();
         }
         else
         {
-            Debug.Log($"[{this.GetType().Name}] {damage.finalDamage}의 데미지를 입었습니다! (남은 체력: {currentHealth})");
             // 코루틴이 이미 실행 중일 수 있으니 멈췄다가 다시 켭니다 (연속 타격 시 버그 방지)
             StopAllCoroutines();
             StartCoroutine(HitRoutine());
@@ -108,7 +118,6 @@ public abstract class BaseMonster : MonoBehaviour
         isDead = true;
         if (coll != null)
             coll.enabled = false;
-        Debug.Log($"[{this.GetType().Name}] 몬스터 파괴됨!");
 
         StopAllCoroutines();
         StartCoroutine(FadeOutAndDestroy());

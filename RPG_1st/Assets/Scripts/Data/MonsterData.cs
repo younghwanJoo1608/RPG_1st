@@ -16,14 +16,13 @@ public class MonsterData : ScriptableObject
 
     [Header("Stats")]
     public int maxHealth = 50;
-
     public int minAttack = 8;
     public int maxAttack = 12;
     public float critChance = 0.05f; // 10% 확률로 크리티컬
     public int defense = 2;         // 몬스터의 방어력
-
     public float moveSpeed = 2f;
     public float attackCooldown = 3f;
+    public int expReward = 20;
 
     [Header("Roaming Settings")]
     public float roamSpeed = 1.8f;       // 평소에 어슬렁거릴 때의 걷는 속도
