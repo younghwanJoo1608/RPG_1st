@@ -23,10 +23,10 @@ MonoBehaviour:
   attackCooldown: 3
   expReward: 1
   roamSpeed: 0.8
-  minRoamWait: 2
-  maxRoamWait: 5
-  minRoamWalk: 2
-  maxRoamWalk: 10
+  minRoamWait: 7
+  maxRoamWait: 30
+  minRoamWalk: 5
+  maxRoamWalk: 20
   roamRadius: 5
   knockbackForce: 5
   stunTime: 0.5

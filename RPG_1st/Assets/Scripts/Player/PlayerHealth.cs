@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 25;
-    public int currentHealth;
+    public int currentHealth = 25;
     public HealthBarUI healthBar;
+
+    public event Action OnHealthChanged;
 
     private Rigidbody2D rb;
     private SpriteRenderer[] spriteRenderers;
@@ -44,11 +47,26 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    public void UpdateMaxHealth(int newMaxHealth)
+    {
+        maxHealth = newMaxHealth;
+        
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        OnHealthChanged?.Invoke();
+    }
+
     public void TakeDamage(DamageResult damage, Transform attacker)
     {
         if (currentHealth <= 0 ||isInvincible) return;
 
         currentHealth -= damage.finalDamage;
+        if (currentHealth < 0) currentHealth = 0;
+
+        OnHealthChanged?.Invoke();
 
         if (healthBar != null)
         {
@@ -58,7 +76,7 @@ public class PlayerHealth : MonoBehaviour
         if (damageTextPrefab != null)
         {
             // 머리 위(Y축 +0.5)에서 약간 무작위(X축)로 흩어지게 소환해서 타격감을 높입니다.
-            Vector2 randomOffset = new Vector2(Random.Range(-0.5f, 0.5f), 0.5f);
+            Vector2 randomOffset = new Vector2(UnityEngine.Random.Range(-0.5f, 0.5f), 0.5f);
             Vector2 spawnPosition = (Vector2)transform.position + randomOffset;
 
             // 프리팹 소환
@@ -67,6 +85,7 @@ public class PlayerHealth : MonoBehaviour
             // 텍스트 내용과 색상 세팅
             textObj.GetComponent<DamageText>().Setup(damage.finalDamage, true, damage.isCritical);
         }
+        
         
         Debug.Log($"[{this.GetType().Name}] 플레이어가 {damage.finalDamage} 데미지를 입었습니다. (남은 체력: {currentHealth})");
 

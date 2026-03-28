@@ -42,8 +42,18 @@ public class PlayerController : MonoBehaviour
         {
             // 키보드 입력 받기 (WASD 또는 방향키)
             // GetAxisRaw를 사용하면 -1, 0, 1 값만 반환해서 미끄러짐 없이 즉각적으로 방향이 전환돼.
-            movement.x = Input.GetAxisRaw("Horizontal");
-            movement.y = Input.GetAxisRaw("Vertical");
+            // movement.x = Input.GetAxisRaw("Horizontal");
+            // movement.y = Input.GetAxisRaw("Vertical");
+            movement.x = 0f;
+            movement.y = 0f;
+            if (Input.GetKey(KeyCode.RightArrow)) movement.x = 1f;
+            if (Input.GetKey(KeyCode.LeftArrow)) movement.x = -1f;
+            if (Input.GetKey(KeyCode.UpArrow)) movement.y = 1f;
+            if (Input.GetKey(KeyCode.DownArrow)) movement.y = -1f;
+
+            // 💡 참고: 좌우/상하 키를 동시에 누르면 0이 되어 멈추게 하려면 아래 코드 추가 (선택사항)
+            if (Input.GetKey(KeyCode.RightArrow) && Input.GetKey(KeyCode.LeftArrow)) movement.x = 0f;
+            if (Input.GetKey(KeyCode.UpArrow) && Input.GetKey(KeyCode.DownArrow)) movement.y = 0f;
 
             // 좌우반전 로직
             if (movement.x < 0)
