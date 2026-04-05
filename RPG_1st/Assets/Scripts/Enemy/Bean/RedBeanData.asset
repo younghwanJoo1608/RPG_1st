@@ -31,4 +31,4 @@ MonoBehaviour:
   knockbackForce: 5
   stunTime: 0.5
   viewDistance: 5
-  viewAngle: 90
+  viewAngle: 60

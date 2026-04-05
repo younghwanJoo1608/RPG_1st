@@ -18,9 +18,18 @@ public class UIManager : MonoBehaviour
 
     [Header("UI Toolkit: Stat Elements")]
     public UIDocument docStatMain;
+    public UIDocument docStatDetail;
     private VisualElement mainPanel;
+    private VisualElement detailPanel;
+
+    // Status Main
     private Label txtStatPoints, txtSTR, txtDEX, txtINT, txtLUK; 
     private Label txtPlayerName, txtHP, txtMP, txtEXP, txtLevel;
+
+    // Status Detail
+    private Label txtPAttack, txtMAttack, txtPDefense, txtMDefense;
+    private Label txtCriticalProb, txtCriticalDamage, txtMoveSpeed;
+
     private VisualElement headerMain; // 창을 잡고 끌 손잡이
     private bool isDragging = false;
     private Vector2 dragStartMousePosition;
@@ -61,24 +70,27 @@ public class UIManager : MonoBehaviour
             var rootMain = docStatMain.rootVisualElement;
             mainPanel = rootMain.Q<VisualElement>("MainPanel");
 
+            var allMainButtons = rootMain.Query<Button>().ToList();
+            foreach (var btn in allMainButtons) btn.focusable = false;
+
             // 버튼 찾기 및 기능 연결
             Button btnCloseMain = rootMain.Q<Button>("btnCloseMain");
             if (btnCloseMain != null) btnCloseMain.clicked += ToggleMainWindow;
 
-            // Button btnDetails = rootMain.Q<Button>("btnDetails");
-            // if (btnDetails != null) btnDetails.clicked += ToggleDetailWindow;
+            Button btnDetails = rootMain.Q<Button>("btnDetails");
+            if (btnDetails != null) btnDetails.clicked += ToggleDetailWindow;
 
             // 스탯 증가 버튼들 연결
-            Button btnSTR = rootMain.Q<Button>("btnStr");
+            Button btnSTR = rootMain.Q<Button>("btnSTR");
             if (btnSTR != null) btnSTR.clicked += () => playerStats.IncreaseStat("STR");
             
-            Button btnDEX = rootMain.Q<Button>("btnDex");
+            Button btnDEX = rootMain.Q<Button>("btnDEX");
             if (btnDEX != null) btnDEX.clicked += () => playerStats.IncreaseStat("DEX");
 
-            Button btnINT = rootMain.Q<Button>("btnInt");
+            Button btnINT = rootMain.Q<Button>("btnINT");
             if (btnINT != null) btnINT.clicked += () => playerStats.IncreaseStat("INT");
 
-            Button btnLUK = rootMain.Q<Button>("btnLuk");
+            Button btnLUK = rootMain.Q<Button>("btnLUK");
             if (btnLUK != null) btnLUK.clicked += () => playerStats.IncreaseStat("LUK");
 
             // 글씨 바뀔 라벨들 찾기
@@ -102,9 +114,33 @@ public class UIManager : MonoBehaviour
                 headerMain.RegisterCallback<PointerUpEvent>(OnDragEnd);
                 headerMain.RegisterCallback<PointerCaptureOutEvent>(OnDragEnd); // 마우스가 화면 밖으로 나갔을 때 대비
             }
-
             // 시작할 때 메인 창 끄기
             if (mainPanel != null) mainPanel.style.display = DisplayStyle.None;
+
+            if (docStatDetail != null)
+            {
+                var rootDetail = docStatDetail.rootVisualElement;
+                detailPanel = rootDetail.Q<VisualElement>("DetailPanel"); // 상세창 UXML의 최상위 이름
+
+                var allDetailButtons = rootDetail.Query<Button>().ToList();
+                foreach (var btn in allDetailButtons) btn.focusable = false;
+
+                Button btnCloseDetail = rootDetail.Q<Button>("btnCloseDetails");
+                if (btnCloseDetail != null) btnCloseDetail.clicked += ToggleDetailWindow;
+
+                // 글씨 바뀔 라벨들 찾기
+                txtPAttack = rootDetail.Q<Label>("txtPAttack");
+                txtMAttack = rootDetail.Q<Label>("txtMAttack");
+                txtPDefense = rootDetail.Q<Label>("txtPDefense");
+                txtMDefense = rootDetail.Q<Label>("txtMDefense");
+
+                txtCriticalProb = rootDetail.Q<Label>("txtCriticalProb");
+                txtCriticalDamage = rootDetail.Q<Label>("txtCriticalDamage");
+                txtMoveSpeed = rootDetail.Q<Label>("txtMoveSpeed");
+
+                if (detailPanel != null) detailPanel.style.display = DisplayStyle.None;
+            }
+            LoadWindowPosition();
         }
 
         // 시작 시 스탯창 숨기기 (CSS의 display: none 과 동일)
@@ -112,6 +148,23 @@ public class UIManager : MonoBehaviour
         {
             mainPanel.style.display = DisplayStyle.None;
         }
+    }
+
+
+    private void SyncDetailPanelPosition(float explicitX = float.NaN, float explicitY = float.NaN)
+    {
+        if (mainPanel == null || detailPanel == null) return;
+
+        // 메인 패널의 현재 X, Y 좌표
+        float mainX = float.IsNaN(explicitX) ? mainPanel.resolvedStyle.left : explicitX;
+        float mainY = float.IsNaN(explicitY) ? mainPanel.resolvedStyle.top : explicitY;
+        
+        // 메인 패널의 너비 (UI가 아직 안 그려졌을 때를 대비해 기본값 300 세팅)
+        float mainWidth = mainPanel.layout.width > 0 ? mainPanel.layout.width : 300f;
+
+        // 상세창의 위치 = 메인창 X + 메인창 너비 + offset
+        detailPanel.style.left = mainX + mainWidth + 5f;
+        detailPanel.style.top = mainY;
     }
 
     private void UpdateLevelUI()
@@ -190,8 +243,28 @@ public class UIManager : MonoBehaviour
         bool isHidden = mainPanel.style.display == DisplayStyle.None;
         mainPanel.style.display = isHidden ? DisplayStyle.Flex : DisplayStyle.None;
 
+        if (!isHidden && detailPanel != null)
+        {
+            detailPanel.style.display = DisplayStyle.None;
+        }
+
         // 창이 켜질 때 최신 정보로 글씨 업데이트
         if (isHidden) UpdateStatText();
+    }
+
+    // 💡 상세창 열기/닫기 함수
+    public void ToggleDetailWindow()
+    {
+        if (detailPanel == null) return;
+
+        bool isHidden = detailPanel.style.display == DisplayStyle.None;
+        detailPanel.style.display = isHidden ? DisplayStyle.Flex : DisplayStyle.None;
+
+        if (isHidden)
+        {
+            SyncDetailPanelPosition(); // 열릴 때 위치 한 번 맞춰줌
+            UpdateStatText();
+        }
     }
 
     private void UpdateStatText()
@@ -207,9 +280,16 @@ public class UIManager : MonoBehaviour
             if (txtINT != null) txtINT.text = playerStats.INT.ToString();
             if (txtLUK != null) txtLUK.text = playerStats.LUK.ToString();
         }
-        else
+
+        if (detailPanel != null && detailPanel.style.display == DisplayStyle.Flex)
         {
-            Debug.LogWarning("⚠️ UpdateStatText가 불렸지만, 스탯창(mainPanel)이 꺼져있거나 null이라서 글씨 업데이트를 건너뛰었습니다.");
+            if (txtPAttack != null) txtPAttack.text = playerStats.minPAttack.ToString() + " ~ " + playerStats.maxPAttack.ToString();
+            if (txtMAttack != null) txtMAttack.text = playerStats.minMAttack.ToString() + " ~ " + playerStats.maxMAttack.ToString();
+            if (txtPDefense != null) txtPDefense.text = playerStats.PDefense.ToString();
+            if (txtMDefense != null) txtMDefense.text = playerStats.MDefense.ToString();
+            if (txtCriticalProb != null) txtCriticalProb.text = (playerStats.CriticalProb * 100f).ToString("F1") + "%";
+            if (txtCriticalDamage != null) txtCriticalDamage.text = (playerStats.CriticalDamage * 100f).ToString("F0") + "%";
+            if (txtMoveSpeed != null) txtMoveSpeed.text = playerStats.moveSpeed.ToString();
         }
     }
 
@@ -234,12 +314,21 @@ public class UIManager : MonoBehaviour
         // 드래그 중이 아니거나, 이 마우스가 우리가 붙잡은 마우스가 아니라면 무시
         if (!isDragging || !headerMain.HasPointerCapture(evt.pointerId)) return;
 
-        // 마우스가 처음 누른 위치에서 얼마나 이동했는지 계산
         Vector2 pointerDelta = new Vector2(evt.position.x, evt.position.y) - dragStartMousePosition;
 
-        // 패널의 원래 위치에 마우스 이동량(Delta)을 더해서 새로운 위치로 옮깁니다.
-        mainPanel.style.left = dragStartPanelPosition.x + pointerDelta.x;
-        mainPanel.style.top = dragStartPanelPosition.y + pointerDelta.y;
+        // 💡 1. 메인 창이 이동할 새로운 좌표를 먼저 계산합니다.
+        float newX = dragStartPanelPosition.x + pointerDelta.x;
+        float newY = dragStartPanelPosition.y + pointerDelta.y;
+
+        // 2. 메인 창 이동!
+        mainPanel.style.left = newX;
+        mainPanel.style.top = newY;
+
+        // 💡 3. 상세창에게도 "방금 계산한 저 좌표(newX, newY)로 똑같이 따라가!" 라고 직접 명령합니다.
+        if (detailPanel != null && detailPanel.style.display == DisplayStyle.Flex)
+        {
+            SyncDetailPanelPosition(newX, newY);
+        }
     }
 
     private void OnDragEnd(EventBase evt)

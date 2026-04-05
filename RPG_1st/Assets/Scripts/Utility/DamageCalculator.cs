@@ -8,9 +8,7 @@ public struct DamageResult
 
 public static class DamageCalculator
 {
-    public const float CRIT_MULTIPLIER = 1.5f;
-
-    public static DamageResult Calculate(int minAtk, int maxAtk, float critChance, int targetDef)
+    public static DamageResult Calculate(int minAtk, int maxAtk, float critChance, float critDamage, int targetDef)
     {
         DamageResult result = new DamageResult();
 
@@ -21,7 +19,7 @@ public static class DamageCalculator
         result.isCritical = Random.value <= critChance;
         if (result.isCritical)
         {
-            baseDamage *= CRIT_MULTIPLIER;
+            baseDamage *= critDamage;
         }
 
         // 3. 방어력 차감 및 최소 데미지(1) 보정

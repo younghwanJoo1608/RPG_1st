@@ -137,11 +137,14 @@ public abstract class BaseMonster : MonoBehaviour
                 PlayerHealth playerHealth = collision.GetComponentInParent<PlayerHealth>();
                 if (playerHealth != null)
                 {
-                    int playerDefense = 2; 
+                    PlayerStats playerStats = collision.GetComponentInParent<PlayerStats>();
+                    int playerDefense = playerStats != null ? playerStats.PDefense : 0;
+                    
                     DamageResult attackResult = DamageCalculator.Calculate(
                         monsterData.minAttack, 
                         monsterData.maxAttack, 
-                        monsterData.critChance, 
+                        monsterData.critChance,
+                        1.5f,
                         playerDefense
                     );
                     

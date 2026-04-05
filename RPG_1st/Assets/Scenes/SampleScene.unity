@@ -216,6 +216,7 @@ RectTransform:
   m_Children:
   - {fileID: 249119348}
   - {fileID: 1791181548}
+  - {fileID: 102350693}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -241,6 +242,7 @@ MonoBehaviour:
   txtExpPercent: {fileID: 1004680198}
   expBar: {fileID: 249119349}
   docStatMain: {fileID: 1791181549}
+  docStatDetail: {fileID: 102350692}
 --- !u!1 &101194285
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,6 +318,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 101194285}
   m_CullTransparentMesh: 1
+--- !u!1 &102350691
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 102350693}
+  - component: {fileID: 102350692}
+  m_Layer: 5
+  m_Name: UI_StatDetail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &102350692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102350691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: d534ddd532ff5234cbf085eacc01bfc8, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: abe65c3ff9850ca41b7e212b5b5e92ae, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!4 &102350693
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102350691}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -399.99997, y: -224.99998, z: 0}
+  m_LocalScale: {x: 0.41666663, y: 0.41666663, z: 0.41666663}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 38205015}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &175291761
 GameObject:
   m_ObjectHideFlags: 0
@@ -7775,12 +7832,19 @@ MonoBehaviour:
   INT: 5
   LUK: 5
   maxHealth: 25
-  minAttack: 1
-  maxAttack: 5
+  minPAttack: 1
+  maxPAttack: 5
+  minMAttack: 1
+  maxMAttack: 5
+  PDefense: 10
+  MDefense: 10
+  CriticalProb: 0.05
+  CriticalDamage: 1.5
   moveSpeed: 5
-  baseWeaponMinAtk: 1
-  baseWeaponMaxAtk: 3
+  armorPDefense: 10
+  armorMDefense: 10
   playerHealth: {fileID: 280377156}
+  weaponManager: {fileID: 467268730}
 --- !u!1 &280789720
 GameObject:
   m_ObjectHideFlags: 0
@@ -8525,6 +8589,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 467268729}
+  - component: {fileID: 467268730}
   m_Layer: 0
   m_Name: WeaponPivot
   m_TagString: Untagged
@@ -8548,6 +8613,19 @@ Transform:
   - {fileID: 1161171421}
   m_Father: {fileID: 280377150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &467268730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467268728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95ca266a11216ce44ba62b1a643763e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponManager
+  currentWeapon: {fileID: 11400000, guid: d70b1f7e68f557c49a7be04f6d6e3b79, type: 2}
 --- !u!1 &486161162
 GameObject:
   m_ObjectHideFlags: 0
@@ -8639,8 +8717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3241fe0d41d6a341a78a0e04fc0918f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponHitbox
-  minDamage: 1
-  maxDamage: 5
+  playerStats: {fileID: 0}
   critChance: 0.05
   maxHitsPerTarget: 1
   hitInterval: 0.2
@@ -10702,7 +10779,7 @@ GameObject:
   - component: {fileID: 1791181548}
   - component: {fileID: 1791181549}
   m_Layer: 5
-  m_Name: StatUI
+  m_Name: UI_Stat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

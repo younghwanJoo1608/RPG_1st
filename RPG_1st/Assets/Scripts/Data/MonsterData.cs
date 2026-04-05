@@ -7,7 +7,7 @@ public enum AggroType
 }
 
 // 이 줄을 넣으면 유니티 에디터에서 우클릭으로 이 데이터를 생성할 수 있게 됩니다!
-[CreateAssetMenu(fileName = "NewMonsterData", menuName = "Game Data/Monster Data")]
+[CreateAssetMenu(fileName = "New Monster", menuName = "Game Data/Monster Data")]
 public class MonsterData : ScriptableObject
 {
     [Header("Basic Info")]

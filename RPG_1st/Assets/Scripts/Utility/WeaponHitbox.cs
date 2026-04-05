@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class WeaponHitbox : MonoBehaviour
 {
+    [Header("References")]
+    public PlayerStats playerStats;
+
     [Header("Weapon Stats")]
-    public int minDamage = 1;
-    public int maxDamage = 5;
     public float critChance = 0.05f;
 
     [Header("Multi-Hit Settings")]
@@ -25,6 +26,11 @@ public class WeaponHitbox : MonoBehaviour
         if (hitCollider != null)
         {
             wasColliderEnabled = hitCollider.enabled;
+        }
+
+        if (playerStats == null)
+        {
+            playerStats = GetComponentInParent<PlayerStats>();
         }
     }
 
@@ -79,7 +85,7 @@ public class WeaponHitbox : MonoBehaviour
                     int enemyDefense = (enemy.monsterData != null) ? enemy.monsterData.defense : 0;
 
                     // 2. 데미지 계산기에 무기 스탯과 몬스터의 방어력을 넣고 굴립니다.
-                    DamageResult result = DamageCalculator.Calculate(minDamage, maxDamage, critChance, enemyDefense);
+                    DamageResult result = DamageCalculator.Calculate(playerStats.minPAttack, playerStats.maxPAttack, playerStats.CriticalProb, playerStats.CriticalDamage, enemyDefense);
 
                     // 3. 계산이 끝난 최종 결과(데미지 수치, 크리 여부)를 전달합니다.
                     enemy.TakeDamage(result, transform);
